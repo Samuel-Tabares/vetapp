@@ -2,7 +2,10 @@
 // VetApp - Frontend JavaScript
 // ========================================
 
-const API_URL = 'http://localhost:8080/api';
+// Configuración de API - Detecta automáticamente si es local o producción
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8080/api'
+    : window.API_BASE_URL || 'https://tu-app.railway.app/api'; // Cambiar por tu URL de Railway
 
 // Estado global
 let propietarios = [];
@@ -19,6 +22,7 @@ let facturas = [];
 document.addEventListener('DOMContentLoaded', () => {
     cambiarSeccion('inicio');
     actualizarNavegacion('inicio');
+    console.log('API URL:', API_URL);
 });
 
 // ========================================
@@ -61,7 +65,6 @@ function actualizarNavegacion(seccionActiva) {
             btn.classList.add('active');
         }
     });
-    // Fix para inicio
     if (seccionActiva === 'inicio') {
         document.querySelector('.nav-btn').classList.add('active');
     }
@@ -193,7 +196,6 @@ async function mostrarInicio(contenido) {
         </div>
     `;
 
-    // Cargar estadísticas
     try {
         const [propRes, mascRes, citaRes, factRes] = await Promise.all([
             fetchAPI('/propietarios'),
@@ -340,7 +342,6 @@ async function eliminarPropietario(id) {
 // ========================================
 
 async function mostrarMascotas(contenido) {
-    // Cargar propietarios para el select
     try {
         const result = await fetchAPI('/propietarios');
         propietarios = result.data || [];
@@ -507,7 +508,6 @@ async function eliminarMascota(id) {
 // ========================================
 
 async function mostrarCitas(contenido) {
-    // Cargar mascotas para el select
     try {
         const result = await fetchAPI('/mascotas');
         mascotas = result.data || [];
@@ -1106,7 +1106,6 @@ async function mostrarFacturas(contenido) {
 
     cargarFacturas();
 
-    // Filtrar mascotas cuando se selecciona propietario
     document.getElementById('selectPropietario').addEventListener('change', (e) => {
         const propId = e.target.value;
         const selectMascota = document.getElementById('selectMascota');
@@ -1135,7 +1134,6 @@ async function mostrarFacturas(contenido) {
             detalles: []
         };
 
-        // Recoger detalles
         let i = 0;
         while (formData.get(`desc_${i}`) !== null) {
             const desc = formData.get(`desc_${i}`);
@@ -1326,14 +1324,12 @@ async function descargarFacturaPDF(id) {
         const result = await fetchAPI(`/facturas/${id}`);
         const f = result.data;
 
-        // Usar jsPDF para generar el PDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // Configurar fuente
         doc.setFont('helvetica');
 
-        // Encabezado
+        // Header
         doc.setFillColor(99, 102, 241);
         doc.rect(0, 0, 210, 40, 'F');
 
@@ -1343,11 +1339,10 @@ async function descargarFacturaPDF(id) {
         doc.setFontSize(12);
         doc.text('Sistema de Gestión Veterinaria', 20, 30);
 
-        // Número de factura
         doc.setFontSize(16);
         doc.text(`Factura: ${f.numeroFactura}`, 130, 25);
 
-        // Datos del cliente
+        // Client data
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(12);
         let y = 55;
@@ -1368,18 +1363,16 @@ async function descargarFacturaPDF(id) {
         y += 7;
         doc.text(`Estado: ${f.estado}`, 20, y);
 
-        // Línea separadora
         y += 10;
         doc.setDrawColor(200, 200, 200);
         doc.line(20, y, 190, y);
 
-        // Detalle de servicios
+        // Details
         y += 10;
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
         doc.text('Detalle de Servicios', 20, y);
 
-        // Encabezados de tabla
         y += 10;
         doc.setFillColor(240, 240, 240);
         doc.rect(20, y - 5, 170, 8, 'F');
@@ -1389,7 +1382,6 @@ async function descargarFacturaPDF(id) {
         doc.text('P. Unit.', 130, y);
         doc.text('Subtotal', 160, y);
 
-        // Filas de detalle
         doc.setFont('helvetica', 'normal');
         f.detalles.forEach(d => {
             y += 8;
@@ -1399,7 +1391,7 @@ async function descargarFacturaPDF(id) {
             doc.text(formatearMoneda(d.subtotal), 160, y);
         });
 
-        // Totales
+        // Totals
         y += 15;
         doc.line(20, y, 190, y);
         y += 10;
@@ -1419,13 +1411,12 @@ async function descargarFacturaPDF(id) {
         doc.setTextColor(99, 102, 241);
         doc.text(formatearMoneda(f.total), 160, y);
 
-        // Pie de página
+        // Footer
         doc.setTextColor(150, 150, 150);
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.text('Gracias por confiar en VetApp para el cuidado de su mascota.', 105, 280, { align: 'center' });
 
-        // Descargar
         doc.save(`Factura_${f.numeroFactura}.pdf`);
 
         mostrarMensaje('PDF descargado exitosamente');
@@ -1454,7 +1445,6 @@ function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
 }
 
-// Cerrar modal al hacer clic fuera
 document.addEventListener('click', (e) => {
     const modal = document.getElementById('modal');
     if (e.target === modal) {
@@ -1462,7 +1452,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Cerrar modal con Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         cerrarModal();

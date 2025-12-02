@@ -68,13 +68,8 @@ cd vetapp
 
 ### Paso 2: Configurar variables de entorno
 ```bash
-cp .env.example .env
+cp .env
 ```
-
-**Importante**: Para Gmail, debes:
-1. Activar verificación en 2 pasos
-2. Generar una "Contraseña de aplicación" en Google Account
-3. Usar esa contraseña en `MAIL_PASSWORD`
 
 ### Paso 3: Levantar con Docker
 ```bash
@@ -88,7 +83,7 @@ Esto levantará:
 
 ### Paso 4: Acceder al sistema
 - **API**: http://localhost:8080/api
-- **Frontend**: Abrir `index.html` en el navegador
+- **Frontend**: Abrir `vetapp/frontend/index.html` en el navegador
 
 ## 📡 Endpoints de la API
 
@@ -136,111 +131,6 @@ Esto levantará:
 - `GET /api/facturas` - Listar todas
 - `GET /api/facturas/{id}` - Obtener por ID
 - `DELETE /api/facturas/{id}` - Eliminar
-
-## 🧪 Pruebas con Postman
-
-### 1. Registrar Propietario
-```json
-POST /api/propietarios
-{
-  "nombre": "Juan",
-  "apellido": "Pérez",
-  "documento": "123456789",
-  "telefono": "3001234567",
-  "email": "juan@example.com",
-  "direccion": "Calle 123"
-}
-```
-
-### 2. Registrar Mascota
-```json
-POST /api/mascotas
-{
-  "propietarioId": 1,
-  "nombre": "Max",
-  "especie": "Perro",
-  "raza": "Labrador",
-  "sexo": "Macho",
-  "peso": 25.5
-}
-```
-
-### 3. Crear Cita (envía email automáticamente)
-```json
-POST /api/citas
-{
-  "mascotaId": 1,
-  "fechaHora": "2024-12-15T10:00:00",
-  "motivo": "Vacunación anual",
-  "observaciones": "Traer carnet de vacunas"
-}
-```
-
-### 4. Crear Historia Clínica
-```json
-POST /api/historias
-{
-  "mascotaId": 1,
-  "fechaConsulta": "2024-12-10T14:30:00",
-  "diagnostico": "Otitis leve",
-  "sintomas": "Rascado excesivo de orejas",
-  "tratamiento": "Gotas óticas",
-  "pesoRegistrado": 25.5,
-  "temperatura": 38.5
-}
-```
-
-### 5. Crear Prescripción
-```json
-POST /api/prescripciones
-{
-  "mascotaId": 1,
-  "medicamento": "Amoxicilina",
-  "dosis": "250mg",
-  "frecuencia": "Cada 12 horas",
-  "duracionDias": 7,
-  "fechaInicio": "2024-12-10",
-  "indicaciones": "Administrar con comida"
-}
-```
-
-### 5.5. Modificar Historia Clínica
-```json
-PUT /api/historias/1
-{
-  "mascotaId": 1,
-  "fechaConsulta": "2024-12-10T14:30:00",
-  "diagnostico": "Otitis moderada - Actualizado",
-  "sintomas": "Rascado excesivo de orejas, enrojecimiento",
-  "tratamiento": "Gotas óticas + Antibiótico oral",
-  "observaciones": "Mejoría después de 3 días de tratamiento",
-  "pesoRegistrado": 26.0,
-  "temperatura": 38.2
-}
-```
-*Nota: Reemplaza el `1` en la URL por el ID de la historia que deseas modificar*
-
-### 6. Crear Factura
-```json
-POST /api/facturas
-{
-  "propietarioId": 1,
-  "mascotaId": 1,
-  "observaciones": "Consulta y medicamentos",
-  "detalles": [
-    {
-      "descripcion": "Consulta veterinaria",
-      "cantidad": 1,
-      "precioUnitario": 50000
-    },
-    {
-      "descripcion": "Amoxicilina 250mg",
-      "cantidad": 2,
-      "precioUnitario": 25000
-    }
-  ]
-}
-```
 
 ## 🐳 Comandos Docker Útiles
 
@@ -290,7 +180,7 @@ vetapp/
 ├── Dockerfile
 ├── docker-compose.yml
 ├── pom.xml
-├── .env.example
+├── .env
 └── README.md
 ```
 
@@ -314,28 +204,5 @@ vetapp/
 2. **MySQL**: Los datos persisten en volumen Docker
 3. **Puertos**: 8080 (API) y 3306 (MySQL) deben estar libres
 4. **Frontend**: Es básico, enfocado en probar funcionalidad
-
-## 👨‍💻 Desarrollo
-
-```bash
-# Compilar sin Docker
-./mvnw clean package
-
-# Ejecutar tests
-./mvnw test
-
-# Ejecutar localmente
-./mvnw spring-boot:run
-```
-
-## 📞 Soporte
-
-Para problemas o dudas, revisa:
-- Los logs con `docker-compose logs -f`
-- Que MySQL esté corriendo
-- Que las credenciales de email sean correctas
-- Que los puertos no estén ocupados
-
----
 
 **Desarrollado con arquitectura modular y patrones de diseño** 🚀

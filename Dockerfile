@@ -14,7 +14,7 @@ RUN mvn dependency:go-offline -B
 # Copiar código fuente
 COPY src ./src
 
-# Compilar aplicación (salta tests para build rápido)
+# Compilar aplicación
 RUN mvn clean package -DskipTests
 
 # ==============================
@@ -31,11 +31,11 @@ USER spring:spring
 # Copiar JAR desde etapa de build
 COPY --from=builder /app/target/*.jar app.jar
 
-# Exponer puerto
+# Exponer puerto (Railway asigna dinámicamente)
 EXPOSE 8080
 
-# Configuración JVM optimizada
-ENV JAVA_OPTS="-Xmx512m -Xms256m"
+# Configuración JVM optimizada para contenedores
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseContainerSupport"
 
-# Ejecutar aplicación
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# Ejecutar con perfil de producción
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=prod -jar app.jar"]
