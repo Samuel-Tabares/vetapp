@@ -1,4 +1,6 @@
-class BusinessException extends RuntimeException {
+package com.veterinaria.shared.exception;
+
+public class BusinessException extends RuntimeException {
     public BusinessException(String message) {
         super(message);
     }
