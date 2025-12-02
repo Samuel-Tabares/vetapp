@@ -1,7 +1,7 @@
-# Multi-stage build para optimizar imagen
-
-# Etapa 1: Build
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+# ==============================
+# Etapa 1: Build (Maven + Java 17)
+# ==============================
+FROM maven:3.9-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
@@ -19,13 +19,15 @@ COPY src ./src
 # Compilar aplicación (salta tests para build rápido)
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Runtime
-FROM eclipse-temurin:17-jre-alpine
+# ==============================
+# Etapa 2: Runtime (Java 17 JRE)
+# ==============================
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
 # Crear usuario no-root para seguridad
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup --system spring && adduser --system --ingroup spring spring
 USER spring:spring
 
 # Copiar JAR desde etapa de build
