@@ -1,6 +1,7 @@
 package com.veterinaria.modules.facturacion.controller;
 
 import com.veterinaria.modules.facturacion.dto.FacturaDTO;
+import com.veterinaria.modules.facturacion.facade.FacturaFacade;
 import com.veterinaria.modules.facturacion.service.FacturaService;
 import com.veterinaria.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * Controller REST para Facturas
  * Endpoints: /api/facturas
+ * Usa FacturaFacade para operaciones con notificación
  */
 @RestController
 @RequestMapping("/api/facturas")
@@ -21,14 +23,16 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class FacturaController {
 
+    private final FacturaFacade facturaFacade;
     private final FacturaService service;
 
     @PostMapping
     public ResponseEntity<ApiResponse<FacturaDTO>> crear(@Valid @RequestBody FacturaDTO dto) {
-        FacturaDTO creada = service.crear(dto);
+        // Usa el Facade para crear factura + enviar notificación
+        FacturaDTO creada = facturaFacade.crearFacturaConNotificacion(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(creada, "Factura creada exitosamente"));
+                .body(ApiResponse.success(creada, "Factura creada y enviada por email exitosamente"));
     }
 
     @GetMapping
