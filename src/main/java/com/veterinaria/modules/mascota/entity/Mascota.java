@@ -41,8 +41,8 @@ public class Mascota {
     @Column(length = 20)
     private String color;
 
-    @Column(precision = 5, scale = 2)
-    private Double peso; // En kg
+    @Column  // Sin precision ni scale
+    private Double peso;
 
     @Column(name = "fecha_registro", nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;

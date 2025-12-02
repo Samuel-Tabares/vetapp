@@ -37,11 +37,11 @@ public class HistoriaClinica {
     @Column(length = 500)
     private String observaciones;
 
-    @Column(precision = 5, scale = 2)
-    private Double pesoRegistrado; // Peso al momento de la consulta
+    @Column  // Sin precision ni scale
+    private Double pesoRegistrado;
 
-    @Column(precision = 5, scale = 2)
-    private Double temperatura; // En grados Celsius
+    @Column  // Sin precision ni scale
+    private Double temperatura;
 
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
