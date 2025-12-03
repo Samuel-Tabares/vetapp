@@ -17,27 +17,12 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-  # Configuración de Mail MEJORADA
+  # SMTP config (para desarrollo local si lo necesitas)
   mail:
     host: smtp.gmail.com
     port: 587
     username: ${MAIL_USERNAME:stabares_26@cue.edu.co}
-    password: ${MAIL_PASSWORD:gntfzaqvxevuxolj}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            trust: smtp.gmail.com
-          connectiontimeout: 10000
-          timeout: 10000
-          writetimeout: 10000
-        transport:
-          protocol: smtp
-        debug: true
+    password: ${MAIL_PASSWORD:}
 
 server:
   port: ${PORT:8080}
@@ -47,12 +32,13 @@ server:
 # Configuración personalizada
 app:
   mail:
-    from: ${MAIL_USERNAME:stabares_26@cue.edu.co}
+    from: ${MAIL_FROM:stabares_26@cue.edu.co}
     enabled: ${MAIL_ENABLED:true}
+  resend:
+    api-key: ${RESEND_API_KEY:re_ipvLA8Qi_CYb33L8k6RPR38ALX43wmFcG}
+    from: "VetApp <onboarding@resend.dev>"
 
-# Logging mejorado para debugging
 logging:
   level:
     root: INFO
     com.veterinaria: DEBUG
-    org.springframework.mail: DEBUG
