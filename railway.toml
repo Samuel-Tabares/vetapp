@@ -3,7 +3,9 @@ builder = "dockerfile"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-healthcheckPath = "/api/propietarios"
+# Usar endpoint simple que no requiere BD
+healthcheckPath = "/health"
+# Tiempo de espera generoso (Spring Boot toma tiempo en iniciar)
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
+restartPolicyMaxRetries = 5
