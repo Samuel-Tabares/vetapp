@@ -13,22 +13,15 @@ import java.util.List;
 
 /**
  * Configuración global de CORS
- * Permite peticiones desde el frontend en GitHub Pages
+ * Permite peticiones desde cualquier origen
  */
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(
-                        "http://localhost:3000",
-                        "http://localhost:5500",
-                        "http://127.0.0.1:3000",
-                        "http://127.0.0.1:5500",
-                        "https://samuel-tabares.github.io",
-                        "https://Samuel-Tabares.github.io"
-                )
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")  // Usar allowedOriginPatterns en vez de allowedOrigins
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true)
